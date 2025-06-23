@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Pos Web';
+  src: url('/fonts/posweb.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  font-family: 'Uber Move', sans-serif;
+  background-color: white;
+}
