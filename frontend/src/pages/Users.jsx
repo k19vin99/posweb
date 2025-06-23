@@ -1,30 +1,36 @@
 import Navbar from "../components/Navbar";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Users() {
-  const usuarios = [
-    { id: 1, email: "admin@allcom.cl", rol: "supervisor" },
-    { id: 2, email: "cajero1@allcom.cl", rol: "cajero" },
-  ];
+  const [usuarios, setUsuarios] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/api/users")
+      .then((res) => setUsuarios(res.data))
+      .catch((err) => console.error("Error al cargar usuarios:", err));
+  }, []);
 
   return (
     <div>
       <Navbar />
       <div style={styles.container}>
-        <h2>Usuarios</h2>
+        <h2 style={styles.title}>Usuarios</h2>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>Rol</th>
+              <th style={styles.th}>ID</th>
+              <th style={styles.th}>Email</th>
+              <th style={styles.th}>Rol</th>
             </tr>
           </thead>
           <tbody>
             {usuarios.map((u) => (
               <tr key={u.id}>
-                <td>{u.id}</td>
-                <td>{u.email}</td>
-                <td>{u.rol}</td>
+                <td style={styles.td}>{u.id}</td>
+                <td style={styles.td}>{u.email}</td>
+                <td style={styles.td}>{u.role}</td>
               </tr>
             ))}
           </tbody>
@@ -37,20 +43,29 @@ export default function Users() {
 const styles = {
   container: {
     padding: "30px",
-    fontFamily: "Uber Move, sans-serif",
+    fontFamily: "POS WEB, sans-serif",
+  },
+  title: {
+    textAlign: "center",
+    fontSize: "28px",
+    marginBottom: "20px",
   },
   table: {
     width: "100%",
     borderCollapse: "collapse",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+    borderRadius: "8px",
+    overflow: "hidden",
   },
   th: {
-    backgroundColor: "#f0f0f0",
-    borderBottom: "1px solid #ccc",
-    textAlign: "left",
-    padding: "10px",
+    backgroundColor: "#f2f2f2",
+    textAlign: "center",
+    padding: "12px",
+    fontWeight: "bold",
   },
   td: {
+    textAlign: "center",
+    padding: "12px",
     borderBottom: "1px solid #eee",
-    padding: "10px",
   },
 };
