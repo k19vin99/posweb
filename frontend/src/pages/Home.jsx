@@ -1,5 +1,8 @@
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
+import commonStyles from "../styles/commonStyles";
+
+
 
 export default function Home() {
   const { role, logout } = useAuth();
@@ -8,7 +11,7 @@ export default function Home() {
     
     <div>
         <Navbar />
-        <h1>Bienvenido al sistema</h1>
+        <h2 style={commonStyles.h2}>Bienvenido al sistema</h2>
         <p>Tu rol: {role}</p>
         <button onClick={logout}>Cerrar sesión</button>
     </div>

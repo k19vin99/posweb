@@ -19,27 +19,9 @@ export default function Navbar() {
         <Link to="/companies" style={styles.link}>Empresas</Link>
         <Link to="/add-company" style={styles.link}>Agregar Empresa</Link>
         <Link to="/add-store" style={styles.link}>Nuevo Almacén</Link>
-
-        <div 
-          style={styles.storeMenu}
-          onMouseEnter={handleMouseEnter} 
-          onMouseLeave={handleMouseLeave}
-        >
-          <Link to="/stores" style={styles.link} onClick={handleClick}>
-            Almacénes
-            <span style={styles.arrow}>{dropdownVisible ? "▲" : "▼"}</span> {/* Flecha hacia abajo */}
-          </Link>
-
-          {/* Mostrar el submenú cuando el ratón pasa o cuando se hace clic */}
-          {dropdownVisible && (
-            <div style={styles.dropdown}>
-              <Link to="/stores/new" style={styles.dropdownLink}>Nuevo Almacén</Link>
-              <Link to="/stores" style={styles.dropdownLink}>Almacénes</Link>
-            </div>
-          )}
-        </div>
-
+        <Link to="/stores" style={styles.link}>Almacenes</Link>
         <Link to="/users" style={styles.link}>Usuarios</Link>
+        <Link to="/add-user" style={styles.link}>Agregar Usuario</Link>
       </div>
 
       <div style={styles.right}>

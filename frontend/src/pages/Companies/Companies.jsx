@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
+import commonStyles from "../../styles/commonStyles";
 
 export default function Companies() {
   const [companies, setCompanies] = useState([]);
@@ -56,10 +57,10 @@ export default function Companies() {
   return (
     <div>
       <Navbar />
-      <div style={styles.container}>
-        <h2>Empresas</h2>
+      <div style={commonStyles.container}>
+        <h2 style={commonStyles.h2}>Empresas</h2>
 
-        <table style={styles.table}>
+        <table style={commonStyles.table}>
           <thead>
             <tr>
               <th>ID</th>
@@ -72,20 +73,20 @@ export default function Companies() {
             </tr>
           </thead>
           <tbody>
-            {companies.map((company) => (
-              <tr key={company.empresa_id}>
-                <td style={styles.td}>{company.empresa_id}</td>
-                <td style={styles.td}>{company.nombre_empresa}</td>
-                <td style={styles.td}>
+            {companies.map((company, index) => (
+              <tr key={company.id} style={index % 2 === 0 ? commonStyles.rowWhite : commonStyles.rowGray}>
+                <td style={commonStyles.td}>{company.empresa_id}</td>
+                <td style={commonStyles.td}>{company.nombre_empresa}</td>
+                <td style={commonStyles.td}>
                   {company.region}, {company.comuna}, {company.poblacion_villa}, {company.calle} {company.numero}
                 </td>
-                <td style={styles.td}>{company.telefono}</td>
-                <td style={styles.td}>{company.correo}</td>
-                <td style={styles.td}>
+                <td style={commonStyles.td}>{company.telefono}</td>
+                <td style={commonStyles.td}>{company.correo}</td>
+                <td style={commonStyles.td}>
                   {company.almacenes.length > 0 ? company.almacenes.join(", ") : "Sin almacenes"}
                 </td>
-                <td style={styles.td}>
-                  <button onClick={() => handleEdit(company)} style={styles.editButton}>Editar</button>
+                <td style={commonStyles.td}>
+                  <button onClick={() => handleEdit(company)} style={commonStyles.editButton}>Editar</button>
                 </td>
               </tr>
             ))}
@@ -93,8 +94,8 @@ export default function Companies() {
         </table>
 
         {editingCompany && (
-          <div style={styles.formContainer}>
-            <h3>Editar Empresa</h3>
+          <div style={commonStyles.formContainer}>
+            <h3 style={commonStyles.h3}>Editar Empresa</h3>
             <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
               <input
                 type="text"
@@ -102,7 +103,7 @@ export default function Companies() {
                 placeholder="Nombre de la empresa"
                 value={formData.nombre}
                 onChange={handleChange}
-                style={styles.input}
+                style={commonStyles.input}
               />
               <input
                 type="text"
@@ -110,7 +111,7 @@ export default function Companies() {
                 placeholder="Dirección"
                 value={formData.direccion}
                 onChange={handleChange}
-                style={styles.input}
+                style={commonStyles.input}
               />
               <input
                 type="text"
@@ -118,7 +119,7 @@ export default function Companies() {
                 placeholder="Teléfono"
                 value={formData.telefono}
                 onChange={handleChange}
-                style={styles.input}
+                style={commonStyles.input}
               />
               <input
                 type="email"
@@ -126,9 +127,9 @@ export default function Companies() {
                 placeholder="Correo"
                 value={formData.correo}
                 onChange={handleChange}
-                style={styles.input}
+                style={commonStyles.input}
               />
-              <button type="button" onClick={handleSaveChanges} style={styles.saveButton}>
+              <button type="button" onClick={handleSaveChanges} style={commonStyles.saveButton}>
                 Guardar Cambios
               </button>
             </form>
@@ -140,54 +141,6 @@ export default function Companies() {
 }
 
 const styles = {
-  container: {
-    padding: "30px",
-    fontFamily: "POS WEB",
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-    borderRadius: "8px",
-    overflow: "hidden",
-  },
-  td: {
-    textAlign: "center",
-    padding: "12px",
-  },
-  editButton: {
-    padding: "6px 12px",
-    backgroundColor: "#FF9800",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  formContainer: {
-    marginTop: "20px",
-    padding: "20px",
-    backgroundColor: "#f9f9f9",
-    borderRadius: "8px",
-    width: "300px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  input: {
-    marginBottom: "10px",
-    padding: "8px",
-    fontSize: "14px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-  },
-  saveButton: {
-    backgroundColor: "#4CAF50",
-    color: "#fff",
-    padding: "10px",
-    fontSize: "16px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
+  
 };
+

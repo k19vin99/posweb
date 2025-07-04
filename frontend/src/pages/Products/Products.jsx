@@ -1,13 +1,17 @@
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "../styles/Products.css"; // <-- Asegúrate de que este path sea correcto
+import "../../styles/Products.css";
+import commonStyles from "../../styles/commonStyles";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Products() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({});
   const [file, setFile] = useState(null);
   const [productos, setProductos] = useState([]);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,14 +51,30 @@ export default function Products() {
     fetchProductos();
   }, []);
 
+  // Eliminar producto
+  const handleDelete = async (id) => {
+    if (window.confirm("¿Seguro que deseas eliminar este producto?")) {
+      try {
+        await axios.delete(`http://localhost:3001/api/products/${id}`);
+        fetchProductos();
+      } catch (err) {
+        alert("Error al eliminar producto");
+      }
+    }
+  };
+
+  // Ir a la página de edición
+  const handleEdit = (id) => {
+    navigate(`/products/${id}`);
+  };
+
   return (
     <div>
       <Navbar />
-      <div style={styles.container}>
-        <h2 className="titulo-productos">Productos</h2>
+      <div style={commonStyles.container}>
+        <h2 style={commonStyles.h2}>Productos</h2>
 
-
-        <table style={styles.table}>
+        <table style={commonStyles.table}>
           <thead>
             <tr>
               <th>Código</th>
@@ -64,19 +84,49 @@ export default function Products() {
               <th>Tipo</th>
               <th>Precio</th>
               <th>Imagen</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {productos.map((p, index) => (
-              <tr key={p.id} style={index % 2 === 0 ? styles.rowWhite : styles.rowGray}>
-                <td style={styles.td}>{p.id}</td>
-                <td style={styles.td}>{p.nombre}</td>
-                <td style={styles.td}>{p.marca}</td>
-                <td style={styles.td}>{p.stock}</td>
-                <td style={styles.td}>{p.tipo}</td>
-                <td style={styles.td}>${p.precio}</td>
-                <td style={styles.td}>
-                  <img src={`http://localhost:3001${p.imagen}`} alt={p.nombre} style={styles.img} />
+              <tr key={p.id} style={index % 2 === 0 ? commonStyles.rowWhite : commonStyles.rowGray}>
+                <td style={commonStyles.td}>{p.id}</td>
+                <td style={commonStyles.td}>{p.nombre}</td>
+                <td style={commonStyles.td}>{p.marca}</td>
+                <td style={commonStyles.td}>{p.stock}</td>
+                <td style={commonStyles.td}>{p.tipo}</td>
+                <td style={commonStyles.td}>${p.precio}</td>
+                <td style={commonStyles.td}>
+                  <img src={`http://localhost:3001${p.imagen}`} alt={p.nombre} style={commonStyles.imgProduct} />
+                </td>
+                <td style={commonStyles.td}>
+                  {/* Botón editar */}
+                  <button
+                    onClick={() => handleEdit(p.id)}
+                    title="Editar"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      marginRight: "8px",
+                      fontSize: "18px",
+                    }}
+                  >
+                    <span role="img" aria-label="editar">✏️</span>
+                  </button>
+                  {/* Botón eliminar */}
+                  <button
+                    onClick={() => handleDelete(p.id)}
+                    title="Eliminar"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "18px",
+                    }}
+                  >
+                    <span role="img" aria-label="eliminar">🗑️</span>
+                  </button>
                 </td>
               </tr>
             ))}
@@ -84,7 +134,7 @@ export default function Products() {
         </table>
 
         <div style={{ marginTop: 20 }}>
-          <button onClick={() => setShowForm(!showForm)} style={styles.addButton}>
+          <button onClick={() => setShowForm(!showForm)} style={commonStyles.addButton}>
             {showForm ? "Cancelar" : "Añadir Producto"}
           </button>
 
@@ -104,9 +154,8 @@ export default function Products() {
               <label className="file-label">
                 Seleccionar imagen
                 <input type="file" name="imagen" required onChange={handleFileChange} className="file-input" />
-                </label>
-                {file && <span className="file-name">Imagen seleccionada</span>}
-
+              </label>
+              {file && <span className="file-name">Imagen seleccionada</span>}
 
               <button type="submit" className="save-button">Guardar</button>
             </form>
@@ -116,43 +165,3 @@ export default function Products() {
     </div>
   );
 }
-
-const styles = {
-  container: {
-    padding: "30px",
-    fontFamily: "POS WEB",
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-    borderRadius: "8px",
-    overflow: "hidden",
-  },
-  td: {
-    textAlign: "center",
-    padding: "12px",
-  },
-  rowWhite: {
-    backgroundColor: "#ffffff",
-  },
-  rowGray: {
-    backgroundColor: "#f9f9f9",
-  },
-  img: {
-    width: "60px",
-    height: "60px",
-    objectFit: "cover",
-    borderRadius: "6px",
-  },
-  addButton: {
-    marginTop: 20,
-    padding: "12px 20px",
-    fontSize: 16,
-    backgroundColor: "#000",
-    color: "#fff",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-  },
-};

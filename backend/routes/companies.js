@@ -8,8 +8,8 @@ router.get("/", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT 
-        company.id AS empresa_id,
-        company.nombre AS nombre_empresa,
+        company.id AS id,
+        company.nombre AS nombre,
         address.region,
         address.comuna,
         address.poblacion_villa,
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
       GROUP BY company.id, address.id
     `);
 
-    res.json(result.rows); // Retornar todas las empresas con sus direcciones y almacenes
+    res.json(result.rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al obtener las empresas." });

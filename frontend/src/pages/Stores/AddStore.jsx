@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";  // Para redireccionar
+import Navbar from "../../components/Navbar";
+import { useNavigate } from "react-router-dom";
+import formStyle from "../../styles/formStyles";
 
 export default function AddStore() {
+  const [isHovered, setIsHovered] = useState(false);
   const [storeData, setStoreData] = useState({
     nombre: "",
     direccion: {
@@ -15,10 +17,18 @@ export default function AddStore() {
     },
     telefono: "",
     correo: "",
-    empresa_id: "",  // Aquí se asociará con el ID de la empresa
+    empresa_id: "",
   });
 
+  const [empresas, setEmpresas] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/api/companies")
+      .then((res) => setEmpresas(res.data))
+      .catch((err) => console.error("Error al cargar empresas:", err));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,10 +45,9 @@ export default function AddStore() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/api/stores", storeData);
+      await axios.post("http://localhost:3001/api/stores", storeData);
       alert("Almacén creado con éxito!");
-      console.log(response.data);
-      navigate("/stores");  // Redirigir a la página de almacenes después de crear
+      navigate("/stores");
     } catch (error) {
       console.error("Error al crear el almacén:", error);
       alert("Hubo un error al crear el almacén.");
@@ -48,9 +57,9 @@ export default function AddStore() {
   return (
     <div>
       <Navbar />
-      <div style={styles.container}>
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <h2>Nombre del Almacén</h2>
+      <div style={formStyle.container}>
+        <form onSubmit={handleSubmit} style={formStyle.form}>
+          <h2 style={formStyle.title}>Nombre del Almacén</h2>
           <input
             type="text"
             name="nombre"
@@ -58,55 +67,55 @@ export default function AddStore() {
             value={storeData.nombre}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
-          <h2>Dirección</h2>
+          <h3 style={formStyle.subtitle}>Dirección</h3>
           <input
             type="text"
-            name="direccion.region"
+            name="region"
             placeholder="Región"
             value={storeData.direccion.region}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
           <input
             type="text"
-            name="direccion.comuna"
+            name="comuna"
             placeholder="Comuna"
             value={storeData.direccion.comuna}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
           <input
             type="text"
-            name="direccion.poblacion_villa"
+            name="poblacion_villa"
             placeholder="Población/Villa"
             value={storeData.direccion.poblacion_villa}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
           <input
             type="text"
-            name="direccion.calle"
+            name="calle"
             placeholder="Calle"
             value={storeData.direccion.calle}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
           <input
             type="number"
-            name="direccion.numero"
+            name="numero"
             placeholder="Número"
             value={storeData.direccion.numero}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
-          <h2>Teléfono</h2>
+          <h3 style={formStyle.subtitle}>Teléfono</h3>
           <input
             type="text"
             name="telefono"
@@ -114,9 +123,9 @@ export default function AddStore() {
             value={storeData.telefono}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
-          <h2>Correo Electrónico</h2>
+          <h3 style={formStyle.subtitle}>Correo Electrónico</h3>
           <input
             type="email"
             name="correo"
@@ -124,19 +133,33 @@ export default function AddStore() {
             value={storeData.correo}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={formStyle.input}
           />
-          <h2>Empresa ID</h2>
-          <input
-            type="text"
+          <h3 style={formStyle.subtitle}>Empresa</h3>
+          <select
             name="empresa_id"
-            placeholder="ID de la empresa"
             value={storeData.empresa_id}
             onChange={handleChange}
             required
-            style={styles.input}
-          />
-          <button type="submit" style={styles.submitButton}>
+            style={formStyle.input}
+          >
+            <option value="">Selecciona una empresa</option>
+            {empresas.map((empresa) => (
+              <option key={empresa.id} value={empresa.id}>
+                {empresa.nombre}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            style={
+              isHovered
+                ? { ...formStyle.button, ...formStyle.buttonHover }
+                : formStyle.button
+            }
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             Guardar Almacén
           </button>
         </form>
@@ -144,30 +167,3 @@ export default function AddStore() {
     </div>
   );
 }
-
-const styles = {
-  container: {
-    padding: "30px",
-    fontFamily: "Arial, sans-serif",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    maxWidth: "400px",
-    margin: "0 auto",
-  },
-  input: {
-    padding: "10px",
-    margin: "10px 0",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-  },
-  submitButton: {
-    padding: "10px 20px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-};

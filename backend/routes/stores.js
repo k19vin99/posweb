@@ -31,5 +31,22 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Error al crear el almacén." });
   }
 });
+// Obtener todos los almacenes
+router.get("/", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT s.id, s.nombre, s.telefono, s.correo, s.empresa_id, 
+              a.region, a.comuna, a.poblacion_villa, a.calle, a.numero,
+              e.nombre AS empresa_nombre
+         FROM store s
+         JOIN address a ON s.direccion_id = a.id
+         JOIN company e ON s.empresa_id = e.id`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("❌ Error al obtener almacenes:", err);
+    res.status(500).json({ error: "Error al obtener almacenes." });
+  }
+});
 
 module.exports = router;

@@ -2,14 +2,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import Products from "./pages/products";
-import Stores from "./pages/Stores";
-import Companies from "./pages/Companies";
-import EditCompany from "./pages/EditCompany";
-import Users from "./pages/Users";
+import Products from "./pages/Products/Products";
+import Stores from "./pages/Stores/Stores";
+import Companies from "./pages/Companies/Companies";
+import EditCompany from "./pages/Companies/EditCompany";
+import Users from "./pages/Users/Users";
 import PrivateRoute from "./components/PrivateRoute";
-import AddCompany from "./pages/AddCompany";
-import AddStore from "./pages/AddStore";
+import AddCompany from "./pages/Companies/AddCompany";
+import AddStore from "./pages/Stores/AddStore";
+import AddUser from "./pages/Users/AddUser";
+import ProductEdit from "./pages/Products/ProductEdit";
 
 function App() {
   return (
@@ -29,7 +31,8 @@ function App() {
           <Route path="/edit-company/:id" element={<PrivateRoute><EditCompany /></PrivateRoute>} /> {/* Ruta para editar */}
           <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
           <Route path="/add-store" element={<AddStore />} />
-
+          <Route path="/add-user" element={<AddUser />} />
+          <Route path="/products/:id" element={<PrivateRoute><ProductEdit /></PrivateRoute>} /> {/* Ruta para editar producto */}
         </Routes>
       </AuthProvider>
     </BrowserRouter>
