@@ -14,10 +14,22 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// GET productos
+// GET productos (con opción de filtrar por store_id)
 router.get("/", async (req, res) => {
+  const { store_id } = req.query;
   try {
-    const result = await pool.query("SELECT * FROM products ORDER BY id ASC");
+    const result = await pool.query(
+      `
+      SELECT 
+        p.*, 
+        s.nombre AS almacen_nombre
+      FROM products p
+      LEFT JOIN store s ON p.store_id = s.id
+      ${store_id ? "WHERE p.store_id = $1" : ""}
+      ORDER BY p.id ASC
+      `,
+      store_id ? [store_id] : []
+    );
     res.json(result.rows);
   } catch (err) {
     console.error("❌ Error al obtener productos:", err);
@@ -27,23 +39,37 @@ router.get("/", async (req, res) => {
 
 // POST nuevo producto con imagen
 router.post("/", upload.single("imagen"), async (req, res) => {
-  const { id, nombre, marca, stock, tipo, precio } = req.body;
+  const { id, nombre, marca, stock, tipo, precio, store_id } = req.body;
   const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
-  console.log("🟡 Datos recibidos:", { id, nombre, marca, stock, tipo, precio, imagen });  // <- Agrega esto
-
   try {
-    const result = await pool.query(
-      "INSERT INTO products (id, nombre, marca, stock, tipo, precio, imagen) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-      [id, nombre, marca, stock, tipo, precio, imagen]
+    // Validar imagen
+    if (!imagen) {
+      return res.status(400).json({ error: "Debes seleccionar una imagen" });
+    }
+
+    // Validar si el ID ya existe
+    const existing = await pool.query("SELECT 1 FROM products WHERE id = $1", [id]);
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: "Código ya existe" });
+    }
+
+    // Insertar producto
+    await pool.query(
+      `INSERT INTO products (id, nombre, marca, stock, tipo, precio, imagen, store_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [id, nombre, marca, stock, tipo, precio, imagen, store_id || null]
     );
-    res.status(201).json(result.rows[0]);
+
+    res.status(201).json({ message: "Producto creado correctamente" });
   } catch (err) {
-    console.error("❌ Error al insertar producto:", err);  // <- Ya lo tienes
-    res.status(500).json({ error: "Error al agregar producto" });
+    console.error("❌ Error al crear producto:", err);
+    res.status(500).json({ error: "Error interno al crear producto" });
   }
 });
-// Obtener un producto por ID
+
+
+// GET producto por ID
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -55,6 +81,21 @@ router.get("/:id", async (req, res) => {
   } catch (err) {
     console.error("❌ Error al obtener producto:", err);
     res.status(500).json({ error: "Error al obtener producto" });
+  }
+});
+
+// DELETE producto por ID
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query("DELETE FROM products WHERE id = $1 RETURNING *", [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+    res.json({ message: "Producto eliminado correctamente", producto: result.rows[0] });
+  } catch (err) {
+    console.error("❌ Error al eliminar producto:", err);
+    res.status(500).json({ error: "Error al eliminar producto" });
   }
 });
 

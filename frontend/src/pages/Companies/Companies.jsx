@@ -53,6 +53,17 @@ export default function Companies() {
       console.error("Error al actualizar la empresa:", error);
     }
   };
+  const handleDelete = async (id) => {
+  if (!window.confirm("¿Estás seguro de que deseas eliminar esta empresa?")) return;
+
+  try {
+    await axios.delete(`http://localhost:3001/api/companies/${id}`);
+    fetchCompanies(); // Actualiza la lista
+  } catch (error) {
+    console.error("Error al eliminar la empresa:", error);
+  }
+};
+
 
   return (
     <div>
@@ -63,7 +74,6 @@ export default function Companies() {
         <table style={commonStyles.table}>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nombre</th>
               <th>Dirección</th>
               <th>Teléfono</th>
@@ -75,19 +85,27 @@ export default function Companies() {
           <tbody>
             {companies.map((company, index) => (
               <tr key={company.id} style={index % 2 === 0 ? commonStyles.rowWhite : commonStyles.rowGray}>
-                <td style={commonStyles.td}>{company.empresa_id}</td>
-                <td style={commonStyles.td}>{company.nombre_empresa}</td>
+                <td style={commonStyles.td}>{company.nombre}</td>
                 <td style={commonStyles.td}>
                   {company.region}, {company.comuna}, {company.poblacion_villa}, {company.calle} {company.numero}
                 </td>
                 <td style={commonStyles.td}>{company.telefono}</td>
                 <td style={commonStyles.td}>{company.correo}</td>
                 <td style={commonStyles.td}>
-                  {company.almacenes.length > 0 ? company.almacenes.join(", ") : "Sin almacenes"}
+                  {company.almacenes && company.almacenes.length > 0
+                    ? company.almacenes.join(", ")
+                    : "Sin almacenes"}
                 </td>
                 <td style={commonStyles.td}>
                   <button onClick={() => handleEdit(company)} style={commonStyles.editButton}>Editar</button>
+                  <button
+                    onClick={() => handleDelete(company.id)}
+                    style={{ ...commonStyles.deleteButton, marginLeft: "10px" }}
+                  >
+                    Eliminar
+                  </button>
                 </td>
+
               </tr>
             ))}
           </tbody>
@@ -129,14 +147,16 @@ export default function Companies() {
                 onChange={handleChange}
                 style={commonStyles.input}
               />
-              <button type="button" onClick={handleSaveChanges} style={commonStyles.saveButton}>
-                Guardar Cambios
-              </button>
             </form>
+            <button onClick={() => navigate("/companies/add")} style={commonStyles.addButton}>
+              Añadir Empresa
+            </button>
           </div>
+          
         )}
       </div>
     </div>
+    
   );
 }
 

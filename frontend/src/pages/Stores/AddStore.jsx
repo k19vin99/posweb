@@ -59,7 +59,8 @@ export default function AddStore() {
       <Navbar />
       <div style={formStyle.container}>
         <form onSubmit={handleSubmit} style={formStyle.form}>
-          <h2 style={formStyle.title}>Nombre del Almacén</h2>
+          <h2 style={formStyle.title}>Nuevo Almacén</h2>
+          <h3 style={formStyle.subtitle}>Nombre del Almacén</h3>
           <input
             type="text"
             name="nombre"

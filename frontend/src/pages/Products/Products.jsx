@@ -39,13 +39,21 @@ export default function Products() {
   };
 
   const fetchProductos = async () => {
-    try {
-      const res = await axios.get("http://localhost:3001/api/products");
-      setProductos(res.data);
-    } catch (err) {
-      console.error("Error al cargar productos", err);
-    }
-  };
+  const params = new URLSearchParams(window.location.search);
+  const storeId = params.get("store_id");
+
+  try {
+    const url = storeId
+      ? `http://localhost:3001/api/products?store_id=${storeId}`
+      : "http://localhost:3001/api/products";
+
+    const res = await axios.get(url);
+    setProductos(res.data);
+  } catch (err) {
+    console.error("Error al cargar productos", err);
+  }
+};
+
 
   useEffect(() => {
     fetchProductos();
@@ -85,6 +93,7 @@ export default function Products() {
               <th>Precio</th>
               <th>Imagen</th>
               <th>Acciones</th>
+              <th>Almacén</th>
             </tr>
           </thead>
           <tbody>
@@ -128,39 +137,16 @@ export default function Products() {
                     <span role="img" aria-label="eliminar">🗑️</span>
                   </button>
                 </td>
+                <td style={commonStyles.td}>
+                  {p.almacen_nombre ? p.almacen_nombre : "Sin asignar"}
+                </td>
+
               </tr>
             ))}
           </tbody>
         </table>
 
-        <div style={{ marginTop: 20 }}>
-          <button onClick={() => setShowForm(!showForm)} style={commonStyles.addButton}>
-            {showForm ? "Cancelar" : "Añadir Producto"}
-          </button>
-
-          {showForm && (
-            <form onSubmit={handleSubmit} className="form-producto">
-              <input type="number" name="id" placeholder="Código" required onChange={handleChange} />
-              <input type="text" name="nombre" placeholder="Nombre" required onChange={handleChange} />
-              <input type="text" name="marca" placeholder="Marca" required onChange={handleChange} />
-              <input type="number" name="stock" placeholder="Stock" required onChange={handleChange} />
-              <input type="number" name="precio" placeholder="Precio" required onChange={handleChange} />
-              <select name="tipo" required onChange={handleChange}>
-                <option value="">Tipo</option>
-                <option value="unitario">Unitario</option>
-                <option value="pesable">Pesable</option>
-              </select>
-
-              <label className="file-label">
-                Seleccionar imagen
-                <input type="file" name="imagen" required onChange={handleFileChange} className="file-input" />
-              </label>
-              {file && <span className="file-name">Imagen seleccionada</span>}
-
-              <button type="submit" className="save-button">Guardar</button>
-            </form>
-          )}
-        </div>
+        
       </div>
     </div>
   );

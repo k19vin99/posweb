@@ -2,23 +2,24 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
 import commonStyles from "../../styles/commonStyles";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Stores() {
   const [stores, setStores] = useState([]);
+  const navigate = useNavigate();
 
-  // Fetch stores
+  // Obtener almacenes
   const fetchStores = async () => {
     try {
       const response = await axios.get("http://localhost:3001/api/stores");
-      setStores(response.data);  // Guarda los almacenes
+      setStores(response.data);
     } catch (error) {
       console.error("Error al cargar los almacenes:", error);
     }
   };
 
   useEffect(() => {
-    fetchStores();  // Cargar almacenes cuando se monta el componente
+    fetchStores();
   }, []);
 
   return (
@@ -35,6 +36,7 @@ export default function Stores() {
               <th>Teléfono</th>
               <th>Correo</th>
               <th>Empresa</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -48,6 +50,14 @@ export default function Stores() {
                 <td style={commonStyles.td}>{store.telefono}</td>
                 <td style={commonStyles.td}>{store.correo}</td>
                 <td style={commonStyles.td}>{store.empresa_nombre}</td>
+                <td style={commonStyles.td}>
+                  <button
+                    onClick={() => navigate(`/products?store_id=${store.id}`)}
+                    style={commonStyles.viewButton}
+                  >
+                    Ver productos
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

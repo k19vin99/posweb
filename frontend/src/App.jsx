@@ -12,6 +12,8 @@ import AddCompany from "./pages/Companies/AddCompany";
 import AddStore from "./pages/Stores/AddStore";
 import AddUser from "./pages/Users/AddUser";
 import ProductEdit from "./pages/Products/ProductEdit";
+import AddProduct from "./pages/Products/AddProduct";
+import MyProfile from "./pages/Profile/MyProfile";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
           <Route path="/add-store" element={<AddStore />} />
           <Route path="/add-user" element={<AddUser />} />
           <Route path="/products/:id" element={<PrivateRoute><ProductEdit /></PrivateRoute>} /> {/* Ruta para editar producto */}
+          <Route path="/products/add" element={<PrivateRoute><AddProduct /></PrivateRoute>} /> {/* Ruta para agregar producto */}
+          <Route path="/profile" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

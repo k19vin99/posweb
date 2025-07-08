@@ -26,7 +26,16 @@ router.post("/login", async (req, res) => {
     if (!valid) return res.status(401).json({ error: "Contraseña incorrecta" });
 
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET);
-    res.json({ token });
+    res.json({
+  token,
+  user: {
+    id: user.id,
+    email: user.email,
+    role: user.role
+  }
+});
+
+
   } catch (err) {
     res.status(500).json({ error: "Error al iniciar sesión" });
   }

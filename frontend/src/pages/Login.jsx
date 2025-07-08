@@ -13,9 +13,14 @@ export default function Login() {
         email,
         password,
       });
-      login(res.data.token, "supervisor"); // Por ahora el rol es fijo
+
+      const { token, user } = res.data;
+
+      // ⬇️ Guardar correctamente user.id y role
+      login(token, user.role, user.id);
     } catch (err) {
       alert("Credenciales incorrectas");
+      console.error("Login error:", err);
     }
   };
 
@@ -47,42 +52,40 @@ export default function Login() {
 
 const styles = {
   container: {
-    minHeight: "100vh",
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
-    fontFamily: "Uber Move, sans-serif",
+    alignItems: "center",
+    height: "100vh",
+    backgroundColor: "#f5f5f5",
   },
   card: {
-    width: "100%",
-    maxWidth: 400,
-    padding: 30,
-    borderRadius: 8,
-    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
     backgroundColor: "#fff",
-    textAlign: "center",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    width: "300px",
   },
   title: {
-    marginBottom: 20,
-    fontSize: 24,
+    textAlign: "center",
+    marginBottom: "20px",
+    fontSize: "20px",
+    fontWeight: "bold",
   },
   input: {
     width: "100%",
-    padding: "12px",
-    marginBottom: 15,
-    fontSize: 16,
-    borderRadius: 4,
+    padding: "10px",
+    marginBottom: "15px",
     border: "1px solid #ccc",
+    borderRadius: "5px",
   },
   button: {
     width: "100%",
-    padding: "12px",
-    fontSize: 16,
+    padding: "10px",
     backgroundColor: "#000",
     color: "#fff",
     border: "none",
-    borderRadius: 4,
+    borderRadius: "5px",
+    fontWeight: "bold",
     cursor: "pointer",
   },
 };

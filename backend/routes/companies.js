@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
         address.numero,
         company.telefono,
         company.correo,
-        ARRAY_AGG(store.nombre) AS almacenes
+        COALESCE(ARRAY_AGG(store.nombre) FILTER (WHERE store.nombre IS NOT NULL), '{}') AS almacenes
       FROM company
       INNER JOIN address ON company.direccion_id = address.id
       LEFT JOIN company_store ON company.id = company_store.company_id
@@ -92,6 +92,34 @@ router.put("/:id", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al actualizar la empresa." });
+  }
+});
+
+// Eliminar empresa
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Eliminar asociaciones con almacenes
+    await pool.query("DELETE FROM company_store WHERE company_id = $1", [id]);
+
+    // Obtener dirección_id antes de eliminar la empresa
+    const result = await pool.query("SELECT direccion_id FROM company WHERE id = $1", [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Empresa no encontrada" });
+    }
+    const direccionId = result.rows[0].direccion_id;
+
+    // Eliminar la empresa
+    await pool.query("DELETE FROM company WHERE id = $1", [id]);
+
+    // Eliminar la dirección asociada
+    await pool.query("DELETE FROM address WHERE id = $1", [direccionId]);
+
+    res.status(200).json({ message: "Empresa eliminada correctamente." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al eliminar la empresa." });
   }
 });
 

@@ -16,12 +16,14 @@ export default function Navbar() {
       <div style={styles.left}>
         <Link to="/home" style={styles.link}>Home</Link>
         <Link to="/products" style={styles.link}>Productos</Link>
+        <Link to="/products/add" style={styles.link}>Agregar Producto</Link>
         <Link to="/companies" style={styles.link}>Empresas</Link>
         <Link to="/add-company" style={styles.link}>Agregar Empresa</Link>
-        <Link to="/add-store" style={styles.link}>Nuevo Almacén</Link>
         <Link to="/stores" style={styles.link}>Almacenes</Link>
+        <Link to="/add-store" style={styles.link}>Agregar Almacén</Link>
         <Link to="/users" style={styles.link}>Usuarios</Link>
         <Link to="/add-user" style={styles.link}>Agregar Usuario</Link>
+        <Link to="/profile" style={styles.link}>Mi Perfil</Link>
       </div>
 
       <div style={styles.right}>
