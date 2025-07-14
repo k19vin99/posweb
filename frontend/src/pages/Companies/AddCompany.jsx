@@ -1,8 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
-import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import formStyle from "../../styles/formStyles";
+import LatBar from "../../components/LatBar";
+import HeaderBar from "../../components/HeaderBar";
 
 export default function AddCompany() {
   const [companyData, setCompanyData] = useState({
@@ -47,100 +48,109 @@ export default function AddCompany() {
   };
 
   return (
-    <div>
-      <Navbar />
-      <div style={formStyle.container}>
-        <form onSubmit={handleSubmit} style={formStyle.form}>
-          <h2 style={formStyle.title}>Nombre de la Empresa</h2>
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre de la empresa"
-            value={companyData.nombre}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <h3 style={formStyle.subtitle}>Dirección</h3>
-          <input
-            type="text"
-            name="region"
-            placeholder="Región"
-            value={companyData.direccion.region}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <input
-            type="text"
-            name="comuna"
-            placeholder="Comuna"
-            value={companyData.direccion.comuna}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <input
-            type="text"
-            name="poblacion_villa"
-            placeholder="Población/Villa"
-            value={companyData.direccion.poblacion_villa}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <input
-            type="text"
-            name="calle"
-            placeholder="Calle"
-            value={companyData.direccion.calle}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <input
-            type="number"
-            name="numero"
-            placeholder="Número"
-            value={companyData.direccion.numero}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <h3 style={formStyle.subtitle}>Teléfono</h3>
-          <input
-            type="text"
-            name="telefono"
-            placeholder="Teléfono"
-            value={companyData.telefono}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <h3 style={formStyle.subtitle}>Correo Electrónico</h3>
-          <input
-            type="email"
-            name="correo"
-            placeholder="Correo electrónico"
-            value={companyData.correo}
-            onChange={handleChange}
-            required
-            style={formStyle.input}
-          />
-          <button
-            type="submit"
-            style={
-              isHovered
-                ? { ...formStyle.button, backgroundColor: "#fff", color: "#000", border: "2px solid #000" }
-                : formStyle.button
-            }
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            Guardar Empresa
-          </button>
-        </form>
-      </div>
+
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', overflowX: 'hidden' }}>
+      <HeaderBar />
+      <div style={{ display: 'flex' }}>
+        <LatBar />
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', padding: '30px 0'}}>
+          <div style={{ width: '100%', maxWidth: '700px', marginLeft: '0px' }}>
+            <div style={formStyle.container}>
+              <form onSubmit={handleSubmit} style={formStyle.form}>
+                <h1 style={formStyle.title}>Formulario de Ingreso de Empresa</h1>
+              <h2 style={formStyle.subtitle}>Nombre de la Empresa</h2>
+              <input
+                type="text"
+                name="nombre"
+                placeholder="Nombre de la empresa"
+                value={companyData.nombre}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <h3 style={formStyle.subtitle}>Dirección</h3>
+              <input
+                type="text"
+                name="region"
+                placeholder="Región"
+                value={companyData.direccion.region}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <input
+                type="text"
+                name="comuna"
+                placeholder="Comuna"
+                value={companyData.direccion.comuna}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <input
+                type="text"
+                name="poblacion_villa"
+                placeholder="Población/Villa"
+                value={companyData.direccion.poblacion_villa}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <input
+                type="text"
+                name="calle"
+                placeholder="Calle"
+                value={companyData.direccion.calle}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <input
+                type="number"
+                name="numero"
+                placeholder="Número"
+                value={companyData.direccion.numero}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <h3 style={formStyle.subtitle}>Teléfono</h3>
+              <input
+                type="text"
+                name="telefono"
+                placeholder="Teléfono"
+                value={companyData.telefono}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <h3 style={formStyle.subtitle}>Correo Electrónico</h3>
+              <input
+                type="email"
+                name="correo"
+                placeholder="Correo electrónico"
+                value={companyData.correo}
+                onChange={handleChange}
+                required
+                style={formStyle.input}
+              />
+              <button
+                type="submit"
+                style={
+                  isHovered
+                    ? { ...formStyle.button, backgroundColor: "#fff", color: "#000", border: "2px solid #000" }
+                    : formStyle.button
+                }
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                Guardar Empresa
+              </button>
+            </form>
+          </div>
+        </div>
+    </div>
+    </div>
     </div>
   );
 }

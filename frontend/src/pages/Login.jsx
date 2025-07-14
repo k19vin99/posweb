@@ -1,11 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import LoginStyles from "../styles/LoginStyle";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
+  const [isHovering, setIsHovering] = useState(false);
+
 
   const handleLogin = async () => {
     try {
@@ -15,8 +20,6 @@ export default function Login() {
       });
 
       const { token, user } = res.data;
-
-      // ⬇️ Guardar correctamente user.id y role
       login(token, user.role, user.id);
     } catch (err) {
       alert("Credenciales incorrectas");
@@ -25,26 +28,46 @@ export default function Login() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Iniciar Sesión</h2>
+    <div style={LoginStyles.container}>
+      <div style={LoginStyles.card}>
+        <h2 style={LoginStyles.title}>Iniciar Sesión</h2>
         <input
           type="email"
           placeholder="Correo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
+          style={LoginStyles.input}
         />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <button onClick={handleLogin} style={styles.button}>
+        <div style={LoginStyles.passwordContainer}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ ...LoginStyles.input, marginBottom: 0 }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            style={LoginStyles.eyeButton}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
+        <button
+          onClick={handleLogin}
+          style={{
+            ...LoginStyles.button,
+            backgroundColor: isHovering ? "#fff" : "#000",
+            color: isHovering ? "#000" : "#fff",
+            border: isHovering ? "1px solid #000" : "none",
+          }}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
           Ingresar
         </button>
+
       </div>
     </div>
   );
@@ -77,6 +100,20 @@ const styles = {
     marginBottom: "15px",
     border: "1px solid #ccc",
     borderRadius: "5px",
+    boxSizing: "border-box",
+  },
+  passwordContainer: {
+    position: "relative",
+    marginBottom: "15px",
+  },
+  eyeButton: {
+    position: "absolute",
+    right: "10px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
   },
   button: {
     width: "100%",

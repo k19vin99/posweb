@@ -1,6 +1,6 @@
 const formStyle = {
   container: {
-    padding: "30px",
+    padding: "10px",
     fontFamily: "POS WEB, sans-serif",
     maxWidth: "600px",
     margin: "40px auto",
