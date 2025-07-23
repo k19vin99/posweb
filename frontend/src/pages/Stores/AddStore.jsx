@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import formStyle from "../../styles/formStyles";
 import LatBar from "../../components/LatBar";
 import HeaderBar from "../../components/HeaderBar";
+import regionesYcomunas from "../../../utils/regionesYcomunas.json"
+
 
 export default function AddStore() {
+  const [comunasDisponibles, setComunasDisponibles] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
   const [storeData, setStoreData] = useState({
     nombre: "",
@@ -32,8 +35,20 @@ export default function AddStore() {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name in storeData.direccion) {
+  const { name, value } = e.target;
+    if (name === "region") {
+      const regionSeleccionada = regionesYcomunas.find(r => r.region === value);
+      setComunasDisponibles(regionSeleccionada ? regionSeleccionada.comunas : []);
+      setStoreData({
+        ...storeData,
+        direccion: { ...storeData.direccion, region: value, comuna: "" } // limpia comuna al cambiar región
+      });
+    } else if (name === "comuna") {
+      setStoreData({
+        ...storeData,
+        direccion: { ...storeData.direccion, comuna: value }
+      });
+    } else if (name in storeData.direccion) {
       setStoreData({
         ...storeData,
         direccion: { ...storeData.direccion, [name]: value },
@@ -42,6 +57,7 @@ export default function AddStore() {
       setStoreData({ ...storeData, [name]: value });
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,24 +92,39 @@ export default function AddStore() {
                 style={formStyle.input}
               />
               <h3 style={formStyle.subtitle}>Dirección</h3>
-              <input
-                type="text"
+              <h3 style={formStyle.subtitle}>Región</h3>
+              <select
                 name="region"
-                placeholder="Región"
                 value={storeData.direccion.region}
                 onChange={handleChange}
                 required
                 style={formStyle.input}
-              />
-              <input
-                type="text"
+              >
+                <option value="">Selecciona una región</option>
+                {regionesYcomunas.map((region) => (
+                  <option key={region.region} value={region.region}>
+                    {region.region}
+                  </option>
+                ))}
+              </select>
+
+              <h3 style={formStyle.subtitle}>Comuna</h3>
+              <select
                 name="comuna"
-                placeholder="Comuna"
                 value={storeData.direccion.comuna}
                 onChange={handleChange}
                 required
                 style={formStyle.input}
-              />
+                disabled={!storeData.direccion.region}
+              >
+                <option value="">Selecciona una comuna</option>
+                {comunasDisponibles.map((comuna) => (
+                  <option key={comuna} value={comuna}>
+                    {comuna}
+                  </option>
+                ))}
+              </select>
+
               <input
                 type="text"
                 name="poblacion_villa"

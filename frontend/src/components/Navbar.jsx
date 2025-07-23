@@ -15,6 +15,7 @@ export default function Navbar() {
     <nav style={styles.navbar}>
       <div style={styles.left}>
         <Link to="/home" style={styles.link}>Home</Link>
+        <Link to="/sales" style={styles.link}>Ventas</Link>
         <Link to="/products" style={styles.link}>Productos</Link>
         <Link to="/products/add" style={styles.link}>Agregar Producto</Link>
         <Link to="/companies" style={styles.link}>Empresas</Link>

@@ -76,7 +76,12 @@ export default function AddProduct() {
               <input type="number" name="stock" placeholder="Stock" required onChange={handleChange} style={formStyles.input}/>
               <input type="number" name="precio" placeholder="Precio" required onChange={handleChange} style={formStyles.input}/>
               
-              <select name="tipo" required onChange={handleChange}>
+              <select 
+                name="tipo" 
+                required 
+                onChange={handleChange}
+                style={formStyles.input}
+                >
                 <option value="">Tipo</option>
                 <option value="unitario">Unitario</option>
                 <option value="pesable">Pesable</option>

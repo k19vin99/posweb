@@ -14,6 +14,7 @@ import AddUser from "./pages/Users/AddUser";
 import ProductEdit from "./pages/Products/ProductEdit";
 import AddProduct from "./pages/Products/AddProduct";
 import MyProfile from "./pages/Profile/MyProfile";
+import Sales from "./pages/Sales/Sales";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Home />
             </PrivateRoute>
           } />
+          <Route path="/sales" element={<PrivateRoute><Sales /></PrivateRoute>}></Route>
           <Route path="/products" element={<PrivateRoute><Products /></PrivateRoute>} />
           <Route path="/stores" element={<PrivateRoute><Stores /></PrivateRoute>} />
           <Route path="/companies" element={<PrivateRoute><Companies /></PrivateRoute>} />
