@@ -16,6 +16,7 @@ import AddProduct from "./pages/Products/AddProduct";
 import MyProfile from "./pages/Profile/MyProfile";
 import Sales from "./pages/Sales/Sales";
 
+
 function App() {
   return (
     <BrowserRouter>
